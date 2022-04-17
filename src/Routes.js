@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import RecipesPage from "./pages/RecipesPage";
+import CalendarPage from "./pages/CalendarPage";
 
 function RoutesApp() {
   return (
     <Routes>
-      <Route path="/" element={<RecipesPage />} />
+      <Route path="/" element={<CalendarPage />} />
     </Routes>
   );
 }
