@@ -53,6 +53,12 @@
     border-left: 1px solid #041C32;
     border-top: 1px solid #041C32;
     height: 80px;
-
+    &.grey {
+      background-color: #eaeaea;
+      color: #808080;
+    }
+    &.cyan {
+      background-color: #CAF0F8;
+    }
   }
 }
