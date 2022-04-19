@@ -11,6 +11,7 @@ dayjs.extend(weekOfYear);
 
 const Calendar = (props) => {
   const { eventData } = useSelector((state) => state.events);
+  console.log("eventData", eventData);
 
   const today = dayjs().format("YYYY-MM-DD");
   const thisYear = dayjs().format("YYYY");
@@ -118,12 +119,12 @@ const Calendar = (props) => {
 
       const eventOnDate = eventData
         ?.filter(
-          (event) => dayjs(event.eventTime).format("YYYY-MM-DD") === day?.date
+          (event) => dayjs(event?.eventTime).format("YYYY-MM-DD") === day?.date
         )
         .sort(
           (a, b) =>
-            (new Date(a.eventTime).getTime() || -Infinity) -
-            (new Date(b.eventTime).getTime() || -Infinity)
+            (new Date(a?.eventTime).getTime() || -Infinity) -
+            (new Date(b?.eventTime).getTime() || -Infinity)
         );
 
       const data = {
@@ -132,12 +133,13 @@ const Calendar = (props) => {
       };
 
       return (
-        <li
-          key={day?.date}
-          onClick={() => props?.dialogOpen({ data: data, type: "add" })}
-          className={style}
-        >
-          <div className="date">{day?.dayOfMonth}</div>
+        <li key={day?.date} className={style}>
+          <div
+            className="date-wrap"
+            onClick={() => props?.dialogOpen({ data: data, type: "add" })}
+          >
+            <div className="date">{day?.dayOfMonth}</div>
+          </div>
           {eventOnDate?.length > 0 &&
             eventOnDate?.map((event, key) => {
               let colorEvent = "orange";
@@ -147,9 +149,19 @@ const Calendar = (props) => {
                 colorEvent = "yellow";
               }
               return (
-                <div className={`event ${colorEvent}`} key={event._id}>
-                  <p>{`${dayjs(event.eventTime).format("HH:mm")} - ${
-                    event.eventName
+                <div
+                  className={`event ${colorEvent}`}
+                  key={event?._id}
+                  onClick={
+                    () =>
+                      props.detailOpen({
+                        data: { ...event, color: colorEvent },
+                      })
+                    // console.log({ data: { ...event, color: colorEvent } })
+                  }
+                >
+                  <p>{`${dayjs(event?.eventTime).format("HH:mm")} - ${
+                    event?.eventName
                   }`}</p>
                 </div>
               );

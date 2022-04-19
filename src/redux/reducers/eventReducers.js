@@ -17,7 +17,7 @@ export const eventReducer = persistReducer(
     switch (action.type) {
       case DELETE_EVENT_REQUEST:
         const afterDelete = state.eventData.filter(
-          (item) => item.id !== action.id
+          (item) => item._id !== action.id
         );
         return {
           ...state,
@@ -25,9 +25,12 @@ export const eventReducer = persistReducer(
         };
 
       case UPDATE_EVENT_REQUEST:
+        console.log("id", action.id, state.eventData);
         const afterUpdate = state.eventData
-          .filter((item) => item.id !== action.id)
+          .filter((item) => item._id !== action.id)
           .concat(action.data);
+
+        console.log(afterUpdate);
         return {
           ...state,
           eventData: afterUpdate,

@@ -14,7 +14,10 @@ import {
   FormFeedback,
 } from "reactstrap";
 import { isEmailValidate } from "../../helpers";
-import { addEventAction } from "../../redux/actions/eventActions";
+import {
+  addEventAction,
+  updateEventAction,
+} from "../../redux/actions/eventActions";
 
 const ModalEvent = (props) => {
   const dispatch = useDispatch();
@@ -23,7 +26,6 @@ const ModalEvent = (props) => {
   const manipulateDate = dayjs(props?.data?.date)
     .startOf("day")
     .format("YYYY-MM-DDTHH:mm");
-  console.log("manipulateDate", manipulateDate);
 
   const [name, nameChange] = useState({ value: "", error: null });
   const [date, dateChange] = useState({
@@ -39,7 +41,19 @@ const ModalEvent = (props) => {
     if (props.open) {
       dateChange({ value: manipulateDate, error: null });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.open]);
+
+  useEffect(() => {
+    if (props?.type === "edit") {
+      nameChange({ value: props?.data?.eventName, error: null });
+      dateChange({
+        value: props?.data?.eventTime,
+        error: null,
+      });
+      guestListChange(props?.data?.eventGuest);
+    }
+  }, [props?.type]);
 
   const setInitState = () => {
     emailChange({ value: "", error: null });
@@ -77,6 +91,13 @@ const ModalEvent = (props) => {
       eventGuest: guestList,
     };
 
+    const dataEdit = {
+      _id: props?.data?._id,
+      eventName: name.value,
+      eventTime: date.value,
+      eventGuest: guestList,
+    };
+
     if (name.value.length < 1) {
       nameChange({ ...name, error: "Event name must be filled" });
     }
@@ -91,7 +112,12 @@ const ModalEvent = (props) => {
       date.value.length > 0 &&
       guestList.length > 1
     ) {
-      dispatch(addEventAction(data));
+      if (props.type === "edit") {
+        dispatch(updateEventAction(props?.data?._id, dataEdit));
+      } else {
+        dispatch(addEventAction(data));
+      }
+
       setTimeout(() => {
         setInitState();
         props.closeDialog();
@@ -101,7 +127,9 @@ const ModalEvent = (props) => {
 
   return (
     <Modal isOpen={props.open} toggle={props.closeDialog}>
-      <ModalHeader toggle={props.closeDialog}>Add Event</ModalHeader>
+      <ModalHeader
+        toggle={props.closeDialog}
+      >{`${props.type} Event`}</ModalHeader>
       <ModalBody>
         <Form>
           <FormGroup>
@@ -154,7 +182,7 @@ const ModalEvent = (props) => {
       </ModalBody>
       <ModalFooter>
         <Button className="button button-primary" onClick={() => onSubmit()}>
-          Save Event
+          Save
         </Button>
       </ModalFooter>
     </Modal>

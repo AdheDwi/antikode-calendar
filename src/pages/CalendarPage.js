@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { Button } from "reactstrap";
 import Calendar from "../components/Calendar/Calendar";
 import ModalEvent from "../components/Modal/Modal";
+import ModalDetail from "../components/Modal/ModalDetail";
 
 const CalendarPage = () => {
   const [openDialog, setOpenDialog] = useState({
@@ -10,15 +11,29 @@ const CalendarPage = () => {
     data: {},
     type: "",
   });
+  const [openDetail, setOpenDetail] = useState({
+    open: false,
+    data: {},
+  });
 
   const closeModal = () => {
     setOpenDialog({ open: false, data: {}, type: "" });
   };
 
   const openModal = (value) => {
+    console.log("add");
     setOpenDialog({ open: true, data: value.data, type: value.type });
+    setOpenDetail({ open: false, data: {} });
   };
 
+  const openModalDetail = (value) => {
+    console.log("det");
+    setOpenDialog({ open: false, data: {}, type: "" });
+    setOpenDetail({ open: true, data: value.data });
+  };
+  const closeModalDetail = () => {
+    setOpenDetail({ open: false, data: {} });
+  };
   return (
     <section className="page-wrapper">
       <div className="fixed-header">
@@ -40,13 +55,22 @@ const CalendarPage = () => {
         </div>
       </div>
       <div className="container">
-        <Calendar dialogOpen={(value) => openModal(value)} />
+        <Calendar
+          dialogOpen={(value) => openModal(value)}
+          detailOpen={(value) => openModalDetail(value)}
+        />
       </div>
       <ModalEvent
         open={openDialog.open}
         data={openDialog.data}
         type={openDialog.type}
         closeDialog={() => closeModal()}
+      />
+      <ModalDetail
+        open={openDetail.open}
+        data={openDetail.data}
+        closeDialog={() => closeModalDetail()}
+        openEdit={(value) => openModal(value)}
       />
     </section>
   );
