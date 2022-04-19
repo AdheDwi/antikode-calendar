@@ -60,6 +60,7 @@
     border-top: 1px solid #041C32;
     height: 100px;
     overflow: hidden;
+    position: relative;
 
     &.grey {
       background-color: #eaeaea;
@@ -83,17 +84,23 @@
       align-items: center;
       margin: 0 0 3px;
       color: #041C32;
+      z-index: 9;
+      position: absolute;
+      left: 0;
       
       &.green {
         background-color: #4E944F;
         color: #fff;
+        top: 35px;
       }
       &.yellow {
         background-color: #FFD124;
+        top: 57px;
       }
       &.orange {
         color: #fff;
         background-color: #E8630A;
+        top: 79px;
       }
       p {
         font-size: 12px;

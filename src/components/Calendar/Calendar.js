@@ -116,10 +116,16 @@ const Calendar = (props) => {
         style = "cyan";
       }
 
-      const eventOnDate = eventData?.filter(
-        (event) => dayjs(event.eventTime).format("YYYY-MM-DD") === day?.date
-      );
-      console.log("eve", eventOnDate);
+      const eventOnDate = eventData
+        ?.filter(
+          (event) => dayjs(event.eventTime).format("YYYY-MM-DD") === day?.date
+        )
+        .sort(
+          (a, b) =>
+            (new Date(a.eventTime).getTime() || -Infinity) -
+            (new Date(b.eventTime).getTime() || -Infinity)
+        );
+
       const data = {
         ...day,
         event: eventOnDate,
@@ -128,7 +134,7 @@ const Calendar = (props) => {
       return (
         <li
           key={day?.date}
-          onClick={() => props?.dialogOpen({ data: data, type: "edit" })}
+          onClick={() => props?.dialogOpen({ data: data, type: "add" })}
           className={style}
         >
           <div className="date">{day?.dayOfMonth}</div>

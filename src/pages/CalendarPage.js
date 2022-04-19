@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import dayjs from "dayjs";
 import { Button } from "reactstrap";
 import Calendar from "../components/Calendar/Calendar";
 import ModalEvent from "../components/Modal/Modal";
-import { getEventAction } from "../redux/actions/eventActions";
 
 const CalendarPage = () => {
   const [openDialog, setOpenDialog] = useState({
@@ -17,7 +17,6 @@ const CalendarPage = () => {
 
   const openModal = (value) => {
     setOpenDialog({ open: true, data: value.data, type: value.type });
-    console.log("openDialog", openDialog);
   };
 
   return (
@@ -28,7 +27,12 @@ const CalendarPage = () => {
             <div className="title-page">Event Calendar</div>
             <Button
               className="button button-add"
-              onClick={() => openModal({ data: {}, type: "add" })}
+              onClick={() =>
+                openModal({
+                  data: { date: dayjs().format("YYYY-MM-DD") },
+                  type: "add",
+                })
+              }
             >
               Add Event
             </Button>

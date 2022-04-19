@@ -15,14 +15,6 @@ export const eventReducer = persistReducer(
   { storage, key: "event-data", whitelist: ["eventData"] },
   (state = eventState, action) => {
     switch (action.type) {
-      case GET_EVENT_REQUEST:
-        const isEventData = window.localStorage.getItem("event-data");
-        console.log("isEventData", isEventData);
-        return {
-          ...state,
-          // eventData: action.data,
-        };
-
       case DELETE_EVENT_REQUEST:
         const afterDelete = state.eventData.filter(
           (item) => item.id !== action.id
@@ -42,7 +34,6 @@ export const eventReducer = persistReducer(
         };
 
       case ADD_EVENT_REQUEST:
-        console.log("haiadd", state);
         const afterAdd =
           state.eventData === null
             ? new Array(action.data)

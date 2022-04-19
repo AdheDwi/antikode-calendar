@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import {
@@ -18,9 +18,16 @@ import { addEventAction } from "../../redux/actions/eventActions";
 
 const ModalEvent = (props) => {
   const dispatch = useDispatch();
+
+  const today = dayjs().format("YYYY-MM-DDTHH:mm");
+  const manipulateDate = dayjs(props?.data?.date)
+    .startOf("day")
+    .format("YYYY-MM-DDTHH:mm");
+  console.log("manipulateDate", manipulateDate);
+
   const [name, nameChange] = useState({ value: "", error: null });
   const [date, dateChange] = useState({
-    value: dayjs().format("YYYY-MM-DDTHH:mm"),
+    value: today,
     error: null,
   });
   const [email, emailChange] = useState({ value: "", error: null });
@@ -28,10 +35,19 @@ const ModalEvent = (props) => {
     { email: "adhedw309@gmail.com", type: "Organizer" },
   ]);
 
+  useEffect(() => {
+    if (props.open) {
+      dateChange({ value: manipulateDate, error: null });
+    }
+  }, [props.open]);
+
   const setInitState = () => {
     emailChange({ value: "", error: null });
     nameChange({ value: "", error: null });
-    dateChange({ value: dayjs().format("YYYY-MM-DDTHH:mm"), error: null });
+    dateChange({
+      value: today,
+      error: null,
+    });
     guestListChange([{ email: "adhedw309@gmail.com", type: "Organizer" }]);
   };
 
