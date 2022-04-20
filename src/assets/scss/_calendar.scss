@@ -61,6 +61,11 @@
     height: 100px;
     overflow: hidden;
     position: relative;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f8f8f8;
+    }
 
     &.grey {
       background-color: #eaeaea;
@@ -96,6 +101,7 @@
       z-index: 5;
       position: absolute;
       left: 0;
+      cursor: pointer;
 
       &.green {
         background-color: #4E944F;
@@ -110,6 +116,9 @@
         color: #fff;
         background-color: #E8630A;
         top: 79px;
+      }
+      &:hover {
+        opacity: 0.85;
       }
       p {
         font-size: 12px;

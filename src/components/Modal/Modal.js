@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
 import {
   Modal,
@@ -12,6 +12,8 @@ import {
   Input,
   Button,
   FormFeedback,
+  Alert,
+  FormText,
 } from "reactstrap";
 import { isEmailValidate } from "../../helpers";
 import {
@@ -21,6 +23,8 @@ import {
 
 const ModalEvent = (props) => {
   const dispatch = useDispatch();
+
+  const { eventData } = useSelector((state) => state.events);
 
   const today = dayjs().format("YYYY-MM-DDTHH:mm");
   const manipulateDate = dayjs(props?.data?.date)
@@ -36,6 +40,13 @@ const ModalEvent = (props) => {
   const [guestList, guestListChange] = useState([
     { email: "adhedw309@gmail.com", type: "Organizer" },
   ]);
+  const [isError, setIsError] = useState(false);
+
+  const checkTotalEvent = eventData?.filter(
+    (event) =>
+      dayjs(event.eventTime).format("YYYY-MM-DD") ===
+      dayjs(manipulateDate).format("YYYY-MM-DD")
+  );
 
   useEffect(() => {
     if (props.open) {
@@ -53,6 +64,7 @@ const ModalEvent = (props) => {
       });
       guestListChange(props?.data?.eventGuest);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props?.type]);
 
   const setInitState = () => {
@@ -114,24 +126,46 @@ const ModalEvent = (props) => {
     ) {
       if (props.type === "edit") {
         dispatch(updateEventAction(props?.data?._id, dataEdit));
-      } else {
-        dispatch(addEventAction(data));
-      }
 
-      setTimeout(() => {
-        setInitState();
-        props.closeDialog();
-      }, 150);
+        setTimeout(() => {
+          setInitState();
+          props.closeDialog();
+        }, 150);
+      } else {
+        if (checkTotalEvent?.length >= 3) {
+          setIsError(true);
+        } else {
+          dispatch(addEventAction(data));
+
+          setTimeout(() => {
+            setInitState();
+            props.closeDialog();
+          }, 150);
+        }
+      }
     }
   };
 
+  const closeDialog = () => {
+    props.closeDialog();
+    setInitState();
+  };
+
   return (
-    <Modal isOpen={props.open} toggle={props.closeDialog}>
+    <Modal isOpen={props.open} toggle={closeDialog}>
       <ModalHeader
-        toggle={props.closeDialog}
+        className="event-modal-header"
+        toggle={closeDialog}
       >{`${props.type} Event`}</ModalHeader>
-      <ModalBody>
+      <ModalBody className="event-modal-body">
         <Form>
+          <Alert
+            isOpen={isError}
+            color="danger"
+            toggle={() => setIsError(false)}
+          >
+            Sorry, This date's event is full
+          </Alert>
           <FormGroup>
             <Label>Event Name</Label>
             <Input
@@ -141,6 +175,7 @@ const ModalEvent = (props) => {
                 nameChange({ value: e.target.value, error: null })
               }
               invalid={name.error}
+              placeholder="Input event name"
             />
             <FormFeedback>{name.error}</FormFeedback>
           </FormGroup>
@@ -166,7 +201,9 @@ const ModalEvent = (props) => {
               }
               invalid={email.error}
               onKeyDown={addGuest}
+              placeholder="Input email guest"
             />
+            <FormText>Note: Press enter to add guest</FormText>
             <FormFeedback>{email.error}</FormFeedback>
             {guestList?.length > 1 && (
               <div className="list-guest">
@@ -180,7 +217,7 @@ const ModalEvent = (props) => {
           </FormGroup>
         </Form>
       </ModalBody>
-      <ModalFooter>
+      <ModalFooter className="event-modal-footer">
         <Button className="button button-primary" onClick={() => onSubmit()}>
           Save
         </Button>

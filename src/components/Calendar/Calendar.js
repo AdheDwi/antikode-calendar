@@ -11,7 +11,6 @@ dayjs.extend(weekOfYear);
 
 const Calendar = (props) => {
   const { eventData } = useSelector((state) => state.events);
-  console.log("eventData", eventData);
 
   const today = dayjs().format("YYYY-MM-DD");
   const thisYear = dayjs().format("YYYY");
@@ -152,16 +151,16 @@ const Calendar = (props) => {
                 <div
                   className={`event ${colorEvent}`}
                   key={event?._id}
-                  onClick={
-                    () =>
-                      props.detailOpen({
-                        data: { ...event, color: colorEvent },
-                      })
-                    // console.log({ data: { ...event, color: colorEvent } })
+                  onClick={() =>
+                    props.detailOpen({
+                      data: { ...event, color: colorEvent },
+                    })
                   }
                 >
                   <p>{`${dayjs(event?.eventTime).format("HH:mm")} - ${
-                    event?.eventName
+                    event?.eventName?.length > 15
+                      ? `${event?.eventName?.substring(0, 15)}...`
+                      : event?.eventName
                   }`}</p>
                 </div>
               );

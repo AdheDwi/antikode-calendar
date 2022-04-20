@@ -43,4 +43,20 @@
     color: #46B5D1;
     min-width: 150px;
   }
+
+  &.button-icon {
+    border-color: #46B5D1;;
+    color: #46B5D1;
+    &.delete {
+      border-color: #B20600;;
+      color: #B20600;
+    }
+    &:hover,
+    &:focus,
+    &:visited {
+      outline: none;
+      box-shadow: none;
+      background-color: #fff;
+    }
+  }
 }
