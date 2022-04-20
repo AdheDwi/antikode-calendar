@@ -1,7 +1,6 @@
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import {
-  GET_EVENT_REQUEST,
   DELETE_EVENT_REQUEST,
   UPDATE_EVENT_REQUEST,
   ADD_EVENT_REQUEST,
